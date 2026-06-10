@@ -1,6 +1,6 @@
 ﻿param(
   [string]$RepoName = "xiangdao-ai-avatar-delivery",
-  [string]$Visibility = "private",
+  [string]$Visibility = "public",
   [string]$Tag = "v1.0.6"
 )
 
