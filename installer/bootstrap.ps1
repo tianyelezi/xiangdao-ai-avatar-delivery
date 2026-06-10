@@ -168,6 +168,10 @@ foreach ($scriptName in @("start-xiangdao-ai.ps1", "stop-xiangdao-ai.ps1")) {
 Write-Step "Installing desktop client"
 $clientDir = Join-Path $InstallRoot "XiangdaoAIApp"
 $localClient = Join-Path (Split-Path $PSScriptRoot -Parent) "release-assets\XiangdaoAI-client-portable.zip"
+Get-Process | Where-Object {
+  $_.ProcessName -like "*Xiangdao*" -or $_.ProcessName -like "*Duix*"
+} | Stop-Process -Force -ErrorAction SilentlyContinue
+
 if ($LocalAssets -and (Test-Path $localClient)) {
   Copy-Item -LiteralPath $localClient -Destination $ClientZip -Force
 } else {
