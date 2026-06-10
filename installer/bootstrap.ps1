@@ -109,7 +109,7 @@ $TempRoot = Join-Path $env:TEMP ("xiangdao-ai-install-" + [Guid]::NewGuid().ToSt
 $RepoRoot = Join-Path $InstallRoot "repo"
 $DeployRoot = Join-Path $InstallRoot "deploy"
 $PatchRoot = Join-Path $InstallRoot "patches"
-$ClientInstaller = Join-Path $TempRoot "XiangdaoAI-client-setup.exe"
+$ClientZip = Join-Path $TempRoot "XiangdaoAI-client-portable.zip"
 $Desktop = [Environment]::GetFolderPath("Desktop")
 
 New-Item -ItemType Directory -Force -Path $InstallRoot, $DeployRoot, $PatchRoot, $TempRoot | Out-Null
@@ -125,7 +125,15 @@ try {
 Write-Step "Fetching deployment files"
 if ($LocalAssets) {
   $sourceRoot = Split-Path $PSScriptRoot -Parent
-  Copy-Item -Path (Join-Path $sourceRoot "*") -Destination $RepoRoot -Recurse -Force
+  if (Test-Path $RepoRoot) {
+    Remove-Item -LiteralPath $RepoRoot -Recurse -Force
+  }
+  New-Item -ItemType Directory -Force -Path $RepoRoot | Out-Null
+  Get-ChildItem -LiteralPath $sourceRoot -Force |
+    Where-Object { $_.Name -notin @(".git", ".installer-build", "dist") } |
+    ForEach-Object {
+      Copy-Item -LiteralPath $_.FullName -Destination $RepoRoot -Recurse -Force
+    }
 } else {
   if ($RepoOwner -eq "YOUR_GITHUB_OWNER") {
     throw "The GitHub repository owner is not configured. Rebuild this installer with the real RepoOwner."
@@ -155,16 +163,20 @@ foreach ($scriptName in @("start-xiangdao-ai.ps1", "stop-xiangdao-ai.ps1")) {
 }
 
 Write-Step "Installing desktop client"
-$localClient = Join-Path (Split-Path $PSScriptRoot -Parent) "release-assets\XiangdaoAI-client-setup.exe"
+$clientDir = Join-Path $InstallRoot "XiangdaoAIApp"
+$localClient = Join-Path (Split-Path $PSScriptRoot -Parent) "release-assets\XiangdaoAI-client-portable.zip"
 if ($LocalAssets -and (Test-Path $localClient)) {
-  Copy-Item -LiteralPath $localClient -Destination $ClientInstaller -Force
+  Copy-Item -LiteralPath $localClient -Destination $ClientZip -Force
 } else {
-  $clientUrl = "https://github.com/$RepoOwner/$RepoName/releases/latest/download/XiangdaoAI-client-setup.exe"
-  Invoke-Download $clientUrl $ClientInstaller
+  $clientUrl = "https://github.com/$RepoOwner/$RepoName/releases/latest/download/XiangdaoAI-client-portable.zip"
+  Invoke-Download $clientUrl $ClientZip
 }
 
-$programDir = Join-Path $env:ProgramFiles "向导AI"
-Start-Process -FilePath $ClientInstaller -ArgumentList "/S", "/allusers", "/D=$programDir" -Wait
+if (Test-Path $clientDir) {
+  Remove-Item -LiteralPath $clientDir -Recurse -Force
+}
+New-Item -ItemType Directory -Force -Path $clientDir | Out-Null
+Expand-Archive -LiteralPath $ClientZip -DestinationPath $clientDir -Force
 
 Write-Step "Preparing Docker backend"
 $docker = Ensure-DockerDesktop
@@ -192,7 +204,7 @@ try {
 
 Write-Step "Creating desktop shortcuts"
 $powerShell = "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe"
-$appExe = Join-Path $programDir "XiangdaoAI.exe"
+$appExe = Join-Path $clientDir "XiangdaoAI.exe"
 $icon = if (Test-Path $appExe) { "$appExe,0" } else { "" }
 New-Shortcut (Join-Path $Desktop "Start Xiangdao AI.lnk") $powerShell "-ExecutionPolicy Bypass -File `"$DeployRoot\start-xiangdao-ai.ps1`"" $icon
 New-Shortcut (Join-Path $Desktop "Stop Xiangdao AI.lnk") $powerShell "-ExecutionPolicy Bypass -File `"$DeployRoot\stop-xiangdao-ai.ps1`"" $icon

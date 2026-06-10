@@ -1,4 +1,5 @@
 .installer-build/
 dist/
 release-assets/*.exe
+release-assets/*.zip
 *.log

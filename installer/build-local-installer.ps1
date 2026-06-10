@@ -19,13 +19,13 @@ $nsi = Join-Path $WorkDir "local-installer.nsi"
 $icon = Join-Path $ScriptRoot "aduidui.ico"
 $bootstrap = Join-Path $ScriptRoot "bootstrap.ps1"
 $deploy = Join-Path $RepoRoot "deploy\*.*"
-$releaseAsset = Join-Path $RepoRoot "release-assets\XiangdaoAI-client-setup.exe"
+$releaseAsset = Join-Path $RepoRoot "release-assets\XiangdaoAI-client-portable.zip"
 $notice = Join-Path $RepoRoot "NOTICE.txt"
 $license = Join-Path $RepoRoot "LICENSE-DUIX"
 $outExe = Join-Path $OutPath "XiangdaoAI-full-installer.exe"
 
 if (-not (Test-Path $releaseAsset)) {
-  throw "Missing client installer asset: $releaseAsset"
+  throw "Missing portable client asset: $releaseAsset"
 }
 
 @"

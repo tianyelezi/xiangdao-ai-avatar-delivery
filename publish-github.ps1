@@ -34,7 +34,7 @@ if (-not $exists) {
 
 .\installer\build-online-installer.ps1 -RepoOwner $owner -RepoName $RepoName
 
-$clientAsset = Join-Path $PSScriptRoot "release-assets\XiangdaoAI-client-setup.exe"
+$clientAsset = Join-Path $PSScriptRoot "release-assets\XiangdaoAI-client-portable.zip"
 $onlineInstaller = Join-Path $PSScriptRoot "dist\XiangdaoAI-online-installer.exe"
 
 if (-not (Test-Path $clientAsset)) { throw "Missing release asset: $clientAsset" }

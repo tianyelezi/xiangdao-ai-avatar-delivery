@@ -22,7 +22,7 @@
 
 发布 Release 时需要上传：
 
-- `XiangdaoAI-client-setup.exe`
+- `XiangdaoAI-client-portable.zip`
 - `向导AI-在线一键部署器.exe`
 
 ## 构建在线部署器

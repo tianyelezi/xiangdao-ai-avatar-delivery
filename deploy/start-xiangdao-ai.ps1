@@ -3,6 +3,7 @@
 $InstallRoot = "__INSTALL_ROOT__"
 $DeployRoot = Join-Path $InstallRoot "deploy"
 $AppCandidates = @(
+  "$InstallRoot\XiangdaoAIApp\XiangdaoAI.exe",
   "$env:ProgramFiles\向导AI\XiangdaoAI.exe",
   "$env:LOCALAPPDATA\Programs\向导AI\XiangdaoAI.exe",
   "D:\duix_avatar_data\DuixAvatarApp\Duix.Avatar.exe"
