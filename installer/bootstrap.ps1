@@ -145,7 +145,10 @@ if ($LocalAssets) {
   $expanded = Get-ChildItem $TempRoot -Directory | Where-Object { $_.Name -like "$RepoName-*" } | Select-Object -First 1
   if (-not $expanded) { throw "Failed to extract repository archive." }
   if (Test-Path $RepoRoot) { Remove-Item -LiteralPath $RepoRoot -Recurse -Force }
-  Copy-Item -Path (Join-Path $expanded.FullName "*") -Destination $RepoRoot -Recurse -Force
+  New-Item -ItemType Directory -Force -Path $RepoRoot | Out-Null
+  Get-ChildItem -LiteralPath $expanded.FullName -Force | ForEach-Object {
+    Copy-Item -LiteralPath $_.FullName -Destination $RepoRoot -Recurse -Force
+  }
 }
 
 Copy-Item -Path (Join-Path $RepoRoot "deploy\*") -Destination $DeployRoot -Recurse -Force
