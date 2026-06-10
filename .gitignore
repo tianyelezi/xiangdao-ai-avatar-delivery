@@ -1,0 +1,4 @@
+.installer-build/
+dist/
+release-assets/*.exe
+*.log
