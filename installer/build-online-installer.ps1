@@ -29,7 +29,7 @@ $outExe = Join-Path $OutPath "XiangdaoAI-online-installer.exe"
 @"
 Unicode true
 RequestExecutionLevel admin
-Name "向导AI 一键部署器"
+Name "Xiangdao AI Installer"
 OutFile "$outExe"
 Icon "$icon"
 UninstallIcon "$icon"
@@ -37,9 +37,11 @@ SilentInstall normal
 ShowInstDetails show
 
 Section
+  MessageBox MB_ICONINFORMATION|MB_OKCANCEL "Xiangdao AI will install a local digital human system on this Windows PC.$\r$\n$\r$\nRequirements:$\r$\n- Windows 10/11, run as Administrator.$\r$\n- NVIDIA GPU and NVIDIA driver.$\r$\n- Docker Desktop / WSL2 will be installed or used.$\r$\n- Internet access to GitHub and Docker Hub.$\r$\n- At least 150GB free disk space is recommended.$\r$\n$\r$\nThe first setup may take a long time because AI backend images and models will be downloaded.$\r$\n$\r$\nClick OK to continue, or Cancel to exit." IDOK +2
+  Abort
   SetOutPath "`$TEMP\XiangdaoAIInstaller"
   File "$preparedBootstrap"
-  DetailPrint "正在启动向导AI一键部署..."
+  DetailPrint "Starting Xiangdao AI deployment..."
   ExecWait 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "`$TEMP\XiangdaoAIInstaller\bootstrap.ps1"'
 SectionEnd
 "@ | Set-Content -LiteralPath $nsi -Encoding UTF8
