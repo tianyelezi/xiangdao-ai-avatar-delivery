@@ -39,7 +39,7 @@ SilentInstall normal
 ShowInstDetails show
 
 Section
-  MessageBox MB_ICONINFORMATION|MB_OKCANCEL "Xiangdao AI will install a local digital human system on this Windows PC.$\r$\n$\r$\nRequirements:$\r$\n- Windows 10/11, run as Administrator.$\r$\n- NVIDIA GPU and NVIDIA driver.$\r$\n- Docker Desktop / WSL2 will be installed or used.$\r$\n- Internet access to GitHub and Docker Hub.$\r$\n- At least 150GB free disk space is recommended.$\r$\n$\r$\nThe first setup may take a long time because AI backend images and models will be downloaded.$\r$\n$\r$\nClick OK to continue, or Cancel to exit." IDOK +2
+  MessageBox MB_ICONINFORMATION|MB_OKCANCEL "向导AI 将在这台 Windows 电脑上部署本地数字人系统。$\r$\n$\r$\n运行条件：$\r$\n- Windows 10/11，并以管理员身份运行。$\r$\n- 需要 NVIDIA 显卡和 NVIDIA 驱动。$\r$\n- 将安装或使用 Docker Desktop / WSL2。$\r$\n- 需要能访问 GitHub 和 Docker Hub。$\r$\n- 建议磁盘至少预留 150GB。$\r$\n$\r$\n首次安装会比较久，因为需要下载 AI 后端镜像和模型。$\r$\n$\r$\n点击“确定”继续安装，点击“取消”退出。" IDOK +2
   Abort
   SetOutPath "`$TEMP\XiangdaoAIInstaller\installer"
   File "$bootstrap"
